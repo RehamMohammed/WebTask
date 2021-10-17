@@ -33,7 +33,7 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
   
   <script>
-    var endpoint = '/api3';
+    var endpoint = '/fig3';
   
     $.ajax({
       method: "GET",
@@ -52,7 +52,7 @@
       var labels = data.labels;
       var chartLabel = data.chartLabel;
       var chartdata = data.chartdata;
-      var ctx = document.getElementById(id).getContext('2d');
+      var ctx = document.getElementById(fig3_id).getContext('2d');
       var myChart = new Chart(ctx, {
         type: 'bar',
         data: {
