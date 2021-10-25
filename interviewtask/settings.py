@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'charts',
     'jchart',
-    'rest_framework'
+    'rest_framework',
+    'bokeh',
 ]
 
 MIDDLEWARE = [

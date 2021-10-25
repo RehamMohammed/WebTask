@@ -29,6 +29,15 @@
     <div class="col-md-6">
       <canvas id="myChartBar"></canvas>
     </div>
+
+
+    <button id="myButton" class="float-left submit-button" >Next</button>
+
+<script type="text/javascript">
+    document.getElementById("myButton").onclick = function () {
+        location.href = "http://127.0.0.1:8000/fig2/";
+    };
+</script>
   
   <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
   
@@ -46,40 +55,25 @@
         console.log(error_data);
       }
     })
+
+    
   
   
     function drawBarGraph(data, id) {
       var labels = data.labels;
       var chartLabel = data.chartLabel;
       var chartdata = data.chartdata;
+      
       var ctx = document.getElementById(id).getContext('2d');
-      var myChart = new Chart(ctx, {
+      var myChart1 = new Chart(ctx, {
         type: 'bar',
         data: {
           labels: labels,
           datasets: [{
             label: chartLabel,
             data: chartdata,
-            backgroundColor: [
-              'rgba(139, 0, 0, 1)',
-              'rgba(139, 0, 0, 1)',
-              'rgba(139, 0, 0, 1)',
-              'rgba(139, 0, 0, 1)',
-              'rgba(139, 0, 0, 1)',
-              'rgba(139, 0, 0, 1)',
-              'rgba(139, 0, 0, 1)',
-              'rgba(139, 0, 0, 1)',
-            ],
-            borderColor: [
-              'rgba(139, 0, 0, 1)',
-              'rgba(139, 0, 0, 1)',
-              'rgba(139, 0, 0, 1)',
-              'rgba(139, 0, 0, 1)',
-              'rgba(139, 0, 0, 1)',
-              'rgba(139, 0, 0, 1)',
-              'rgba(139, 0, 0, 1)',
-              'rgba(139, 0, 0, 1)',
-            ],
+            backgroundColor: 'rgba(139, 0, 0, 1)',
+            borderColor: 'rgba(139, 0, 0, 1)',
             borderWidth: 1
           }]
         },
@@ -93,6 +87,9 @@
           }
         }
       });
+
+
+     
     }
 
     
