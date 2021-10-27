@@ -238,29 +238,27 @@ class ChartData5(APIView):
 
 class ChartData6(APIView):
     def get(self,request , format = None):
-        df1 = dataf[['date_account_created','age']].dropna()
-        group = df1.groupby('date_account_created')
-
-        df2 = group.apply(lambda x: x['age'].unique())
-        #ages = df2.value_counts().index
-
-        def get_no_of_ages(mn,mx):
-            age = []
-            for i in df2:
-                cnt1 = 0
-                for j in i:
-                  if int(j) >=mn and int(j) < mx:
-                     cnt1 += 1
-            
-                age.append(cnt1)
-            return age
-        age1 = get_no_of_ages(18,20)
-        age2 = get_no_of_ages(20,30)
-        age3 = get_no_of_ages(30,40)
-        age4 = get_no_of_ages(40,50)
-        age5 = get_no_of_ages(50,60)
-        age6 = get_no_of_ages(60,70)
-        age7 = get_no_of_ages(70,90)
+        dataf['range1'] = [1 if (x>=18 and x<20) else 0 for x in dataf['age']]
+        dataf['range2'] = [1 if (x>=20 and x<30) else 0 for x in dataf['age']]
+        dataf['range3'] = [1 if (x>=30 and x<40) else 0 for x in dataf['age']]
+        dataf['range4'] = [1 if (x>=40 and x<50) else 0 for x in dataf['age']]
+        dataf['range5'] = [1 if (x>=50 and x<60) else 0 for x in dataf['age']]
+        dataf['range6'] = [1 if (x>=60 and x<70) else 0 for x in dataf['age']]
+        dataf['range7'] = [1 if (x>=70 and x<80) else 0 for x in dataf['age']]
+        dd1 = dataf.groupby(['date_account_created','range1']).size().unstack(fill_value=0)
+        age1 = dd1[1].tolist()
+        dd2 = dataf.groupby(['date_account_created','range2']).size().unstack(fill_value=0)
+        age2 = dd2[1].tolist()
+        dd3 = dataf.groupby(['date_account_created','range3']).size().unstack(fill_value=0)
+        age3 = dd3[1].tolist()
+        dd4 = dataf.groupby(['date_account_created','range4']).size().unstack(fill_value=0)
+        age4 = dd4[1].tolist()
+        dd5 = dataf.groupby(['date_account_created','range5']).size().unstack(fill_value=0)
+        age5 = dd5[1].tolist()
+        dd6 = dataf.groupby(['date_account_created','range6']).size().unstack(fill_value=0)
+        age6 = dd6[1].tolist()
+        dd7 = dataf.groupby(['date_account_created','range7']).size().unstack(fill_value=0)
+        age7 = dd7[1].tolist()
 
         dates = get_dates('date_account_created')
         labels = dates
