@@ -42,7 +42,10 @@ def get_page4(request):
     return render(request, 'figure4.html')
 
 def get_page5(request):
-    return render(request, 'figure5.html')    
+    return render(request, 'figure5.html')  
+
+def get_page6(request):
+    return render(request, 'figure6.html')    
 
 #Affiliate channel percentage
 class ChartData1(APIView):
@@ -210,21 +213,30 @@ p.line(x_values, y_values, legend="Respiration rate", line_width=2)
 
 # show the results
 show(p)'''
-'''class ChartData(APIView):
+class ChartData5(APIView):
     def get(self,request , format = None):
-        new_df2 = dataf['date_account_created']
-        df_list = new_df2.value_counts()
-        x_values = df_list.index
+        dataf['date_account_created'] = pd.to_datetime(dataf.date_account_created, infer_datetime_format = True)
+        dataf.sort_values(by = 'date_account_created', ascending = True, inplace = True)
+        df_list = [dataf['date_account_created']]
+        headers = ["Date"]
+        new_df = pd.concat(df_list, axis=1, keys=headers)
         y_values = []
-        for i in range(len(df_list)):
-            y_values.append(df_list[i])
-        
-        labels = ["01-2010","07-2010","01-2011","07-2011","01-2012","07-2012","01-2013","07-2013","01-2014","07-2014"]
+        df_list2 = new_df['Date'].value_counts().sort_index(ascending=True)
+        for i in range(len(df_list2)) :
+            y_values.append(df_list2[i])
+
+        TimeStamps = dataf['date_account_created'].unique()
+        dates = []
+        for i in TimeStamps:
+            t = str(pd.to_datetime(i).date())
+            dates.append(t)
+
+        labels = dates
         chartLabel = "date_account_created"
-        chartdata = date
+        chartdata = y_values
         data ={
                 "labels":labels,
                 "chartLabel":chartLabel,
                 "chartdata":chartdata,
             }
-        return Response(data)'''
+        return Response(data)
