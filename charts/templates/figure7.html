@@ -24,26 +24,26 @@
     <h1>     
       <b>   
     
-       <p style="font-size:15px">Date Account Created</p>  
+       <p style="font-size:15px">Date account areated dist/ signup app</p>  
    
       </b>
    </h1>
-    <div class="col-md-6" style="position: relative; height:40vh; width:80vw">
+    <div class="col-md-6" style="position: relative; height:60vh; width:90vw">
       <canvas id="LineChart"></canvas>
     </div>
 
-    <button id="myButton" class="float-left submit-button" >Next</button>
+    <button id="myButton" class="float-left submit-button" >Prev</button>
 
     <script type="text/javascript">
         document.getElementById("myButton").onclick = function () {
-            location.href = "http://127.0.0.1:8000/fig7/";
+            location.href = "http://127.0.0.1:8000/";
         };
     </script>
   
   <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
   
   <script>
-    var endpoint = 'api6';
+    var endpoint = 'api7';
   
     $.ajax({
       method: "GET",
@@ -64,16 +64,11 @@
         var chartLabel1 = data.chartLabel1;
         var chartLabel2 = data.chartLabel2;
         var chartLabel3 = data.chartLabel3;
-        var chartLabel4 = data.chartLabel4;
-        var chartLabel5 = data.chartLabel5;
-        var chartLabel6 = data.chartLabel6;
         var chartdata0 = data.chartdata0;
         var chartdata1 = data.chartdata1;
         var chartdata2 = data.chartdata2;
         var chartdata3 = data.chartdata3;
-        var chartdata4 = data.chartdata4;
-        var chartdata5 = data.chartdata5;
-        var chartdata6 = data.chartdata6;
+       
       var ctx = document.getElementById(id).getContext('2d');
       var myChart = new Chart(ctx, {
         type: 'line',
@@ -91,44 +86,24 @@
             label: chartLabel1,
             fill: false,
             data: chartdata1,
-            backgroundColor: 'rgb(204, 82, 0)',
-            borderColor: 'rgb(204, 82, 0)',
+            backgroundColor: 'rgb(153, 102, 255)',
+            borderColor: 'rgb(153, 102, 255)',
           },
           {
             label: chartLabel2,
             fill: false,
             data: chartdata2,
-            backgroundColor: 'rgb(119, 51, 255)',
-            borderColor: 'rgb(119, 51, 255)',
+            backgroundColor: 'rgb(255, 204, 0)',
+            borderColor: 'rgb(255, 204, 0)',
           },
           {
             label: chartLabel3,
             fill: false,
             data: chartdata3,
-            backgroundColor: 'rgb(255, 153, 0)',
-            borderColor: 'rgb(255, 153, 0)',
+            backgroundColor: 'rgb(82, 82, 122)',
+            borderColor: 'rgb(82, 82, 122)',
           },
-          {
-            label: chartLabel4,
-            fill: false,
-            data: chartdata4,
-            backgroundColor: 'rgb(153, 102, 0)',
-            borderColor: 'rgb(153, 102, 0)',
-          },
-          {
-            label: chartLabel5,
-            fill: false,
-            data: chartdata5,
-            backgroundColor: 'rgb(102, 153, 0)',
-            borderColor: 'rgb(102, 153, 0)',
-          },
-          {
-            label: chartLabel6,
-            fill: false,
-            data: chartdata6,
-            backgroundColor: 'rgb(0, 179, 134)',
-            borderColor: 'rgb(0, 179, 134)',
-          },
+         
         ]
         },
         options: {

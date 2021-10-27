@@ -29,6 +29,19 @@ def get_samples(col):
         dictt[i]  = dataf[col].value_counts()[i]
     return dictt
 
+def get_dates(col):
+
+    dataf['date_account_created'] = pd.to_datetime(dataf.date_account_created, infer_datetime_format = True)
+    dataf.sort_values(by = 'date_account_created', ascending = True, inplace = True)
+
+    TimeStamps = dataf['date_account_created'].unique()
+    dates = []
+    for i in TimeStamps:
+        t = str(pd.to_datetime(i).date())
+        dates.append(t)
+
+    return dates
+
 def get_page1(request):
     return render(request, 'index.html')
 
@@ -45,7 +58,10 @@ def get_page5(request):
     return render(request, 'figure5.html')  
 
 def get_page6(request):
-    return render(request, 'figure6.html')    
+    return render(request, 'figure6.html')  
+
+def get_page7(request):
+    return render(request, 'figure7.html')   
 
 #Affiliate channel percentage
 class ChartData1(APIView):
@@ -195,24 +211,7 @@ class ChartData4(APIView):
         }
         return Response(data)
 
-'''new_df2 = dataf['date_account_created']
-df_list = new_df2.value_counts()
-x_values = df_list.index
-y_values = []
-for i in range(len(df_list)):
-    y_values.append(df_list[i])
 
-output_file("figure5.html")
-
-# create a new plot with a title and axis labels
-p = figure(title="Respiration rate class", x_axis_label= "Patient ID 123", y_axis_label= "Respiration rates", plot_width = 1000)
-
-# add a line renderer with legend and line thickness
-p.line(x_values, y_values, legend="Respiration rate", line_width=2)
-
-
-# show the results
-show(p)'''
 class ChartData5(APIView):
     def get(self,request , format = None):
         dataf['date_account_created'] = pd.to_datetime(dataf.date_account_created, infer_datetime_format = True)
@@ -225,11 +224,7 @@ class ChartData5(APIView):
         for i in range(len(df_list2)) :
             y_values.append(df_list2[i])
 
-        TimeStamps = dataf['date_account_created'].unique()
-        dates = []
-        for i in TimeStamps:
-            t = str(pd.to_datetime(i).date())
-            dates.append(t)
+        dates = get_dates('date_account_created')
 
         labels = dates
         chartLabel = "date_account_created"
@@ -240,3 +235,68 @@ class ChartData5(APIView):
                 "chartdata":chartdata,
             }
         return Response(data)
+
+class ChartData6(APIView):
+    def get(self,request , format = None):
+        df1 = dataf[['date_account_created','age']].dropna()
+        group = df1.groupby('date_account_created')
+
+        df2 = group.apply(lambda x: x['age'].unique())
+        #ages = df2.value_counts().index
+
+        def get_no_of_ages(mn,mx):
+            age = []
+            for i in df2:
+                cnt1 = 0
+                for j in i:
+                  if int(j) >=mn and int(j) < mx:
+                     cnt1 += 1
+            
+                age.append(cnt1)
+            return age
+        age1 = get_no_of_ages(18,20)
+        age2 = get_no_of_ages(20,30)
+        age3 = get_no_of_ages(30,40)
+        age4 = get_no_of_ages(40,50)
+        age5 = get_no_of_ages(50,60)
+        age6 = get_no_of_ages(60,70)
+        age7 = get_no_of_ages(70,90)
+
+        dates = get_dates('date_account_created')
+        labels = dates
+        chartLabel = ["(id, 18-20)" , "(id, 20-30)", "(id, 30-40)", "(id, 40-50)", "(id, 50-60)", "(id, 60-70)", "(id, 70+)"]
+        chartdata = [age1,age2,age3,age4,age5,age6,age7]
+        data ={
+                "labels":labels,
+                "chartLabel0":chartLabel[0],"chartLabel1":chartLabel[1],"chartLabel2":chartLabel[2],"chartLabel3":chartLabel[3],
+                "chartLabel4":chartLabel[4],"chartLabel5":chartLabel[5],"chartLabel6":chartLabel[6],
+                "chartdata0":age1,"chartdata1":age2,
+                "chartdata2":age3, "chartdata3":age4,
+                "chartdata4":age5,"chartdata5":age6,"chartdata6":age7,
+            }
+        return Response(data)
+
+class ChartData7(APIView):
+    def get(self,request , format = None):
+        df_apps = dataf.groupby(['date_account_created','signup_app']).size().unstack(fill_value=0)
+        Android = df_apps['Android'].values.tolist()
+        Moweb = df_apps['Moweb'].values.tolist()
+        Web = df_apps['Web'].values.tolist()
+        Ios = df_apps['iOS'].values.tolist()
+        #x_values (dates)
+        dates = get_dates('date_account_created')
+        labels = dates
+        chartLabel = ['Android', 'Moweb', 'Web', 'iOS']
+        chartdata = [Android,Moweb,Web,Ios]
+        data ={
+                "labels":labels,
+                "chartLabel0":chartLabel[0],"chartLabel1":chartLabel[1],
+                "chartLabel2":chartLabel[2],"chartLabel3":chartLabel[3],
+            
+                "chartdata0":Android,"chartdata1":Moweb,
+                "chartdata2":Web, "chartdata3":Ios,
+
+            }
+        return Response(data)
+
+        
