@@ -15,19 +15,19 @@ from collections import OrderedDict
 datafile = pd.read_csv(r"C:\Users\Reham\interviewtask\charts\train_users_2.csv")
 dataf = pd.DataFrame(data = datafile, index=None)
 
-dict = {}
-dictt = {}
-def get_data(col):
+def get_affiliate_channel_percentage(col):
+    dict = {}
     affCol = set(dataf[col].values)
     for i in affCol:
         dict[i] = (dataf[col].value_counts()[i]/len(dataf[col].values)) * 100
 
     return dict
-def get_samples(col):
+def get_samples_per_class(col):
+    dict = {}
     country = set(dataf[col].values)
     for i in country:
-        dictt[i]  = dataf[col].value_counts()[i]
-    return dictt
+        dict[i]  = dataf[col].value_counts()[i]
+    return dict
 
 def get_dates(col):
 
@@ -67,7 +67,7 @@ def get_page7(request):
 class ChartData1(APIView):
    
     def get(self,request , format = None):
-        dict = get_data('affiliate_channel')
+        dict = get_affiliate_channel_percentage('affiliate_channel')
         d_descending = OrderedDict(sorted(dict.items(), key=lambda kv: kv[1], reverse=True))
         keys = []
         values = []
@@ -86,7 +86,7 @@ class ChartData1(APIView):
 #Affiliate channel provider percentage
 class ChartData2(APIView):
     def get(self,request , format = None):
-        dict = get_data('affiliate_provider')
+        dict = get_affiliate_channel_percentage('affiliate_provider')
         d_descending = OrderedDict(sorted(dict.items(), key=lambda kv: kv[1], reverse=True))
         keys = []
         values = []
@@ -105,14 +105,14 @@ class ChartData2(APIView):
 #Samples per class 
 class ChartData3(APIView):
     def get(self,request , format = None):
-            dict3 = get_samples('country_destination')
+            dict = get_samples_per_class('country_destination')
             
-            sortednames=sorted(dict3.keys(), key=lambda x:x.lower())
+            sortednames=sorted(dict.keys(), key=lambda x:x.lower())
             keyss = []
             valuess = []
             for i in sortednames:
                 keyss.append(i)
-                valuess.append(dict3[i])
+                valuess.append(dict[i])
             
             labels = keyss
             chartLabel = "country_destination"
@@ -127,7 +127,7 @@ class ChartData3(APIView):
 #Sign up dist per page
 class ChartData4(APIView):
     def get(self,request , format = None):
-        dff = set(dataf["signup_app"].values)
+        #dff = set(dataf["signup_app"].values)
     
         new_df = dataf[['signup_app','age']].dropna()
         #print(new_df.groupby('signup_app')['age'].apply(list))
@@ -170,14 +170,14 @@ class ChartData4(APIView):
             l1 = [range1,range2,range3,range4,range5,range6,range7]
             return l1
 
-        dict2 = {}
+        apps_dict = {}
         
-        dict2['Android'] = no_of_users(Android)
-        dict2['Moweb'] = no_of_users(Moweb)
-        dict2['Web'] = no_of_users(Web)
-        dict2['iOS'] = no_of_users(Ios)
+        apps_dict['Android'] = no_of_users(Android)
+        apps_dict['Moweb'] = no_of_users(Moweb)
+        apps_dict['Web'] = no_of_users(Web)
+        apps_dict['iOS'] = no_of_users(Ios)
         keys2 = []
-        keys2.append(dict2.keys())
+        keys2.append(apps_dict.keys())
         values2 = []
         A = no_of_users(Android)
         M = no_of_users(Moweb)
@@ -238,27 +238,27 @@ class ChartData5(APIView):
 
 class ChartData6(APIView):
     def get(self,request , format = None):
-        dataf['range1'] = [1 if (x>=18 and x<20) else 0 for x in dataf['age']]
-        dataf['range2'] = [1 if (x>=20 and x<30) else 0 for x in dataf['age']]
-        dataf['range3'] = [1 if (x>=30 and x<40) else 0 for x in dataf['age']]
-        dataf['range4'] = [1 if (x>=40 and x<50) else 0 for x in dataf['age']]
-        dataf['range5'] = [1 if (x>=50 and x<60) else 0 for x in dataf['age']]
-        dataf['range6'] = [1 if (x>=60 and x<70) else 0 for x in dataf['age']]
-        dataf['range7'] = [1 if (x>=70 and x<80) else 0 for x in dataf['age']]
-        dd1 = dataf.groupby(['date_account_created','range1']).size().unstack(fill_value=0)
-        age1 = dd1[1].tolist()
-        dd2 = dataf.groupby(['date_account_created','range2']).size().unstack(fill_value=0)
-        age2 = dd2[1].tolist()
-        dd3 = dataf.groupby(['date_account_created','range3']).size().unstack(fill_value=0)
-        age3 = dd3[1].tolist()
-        dd4 = dataf.groupby(['date_account_created','range4']).size().unstack(fill_value=0)
-        age4 = dd4[1].tolist()
-        dd5 = dataf.groupby(['date_account_created','range5']).size().unstack(fill_value=0)
-        age5 = dd5[1].tolist()
-        dd6 = dataf.groupby(['date_account_created','range6']).size().unstack(fill_value=0)
-        age6 = dd6[1].tolist()
-        dd7 = dataf.groupby(['date_account_created','range7']).size().unstack(fill_value=0)
-        age7 = dd7[1].tolist()
+        dataf['range1'] = [1 if (x>=18 and x<=20) else 0 for x in dataf['age']]
+        dataf['range2'] = [1 if (x>20 and x<=30) else 0 for x in dataf['age']]
+        dataf['range3'] = [1 if (x>30 and x<=40) else 0 for x in dataf['age']]
+        dataf['range4'] = [1 if (x>40 and x<=50) else 0 for x in dataf['age']]
+        dataf['range5'] = [1 if (x>50 and x<=60) else 0 for x in dataf['age']]
+        dataf['range6'] = [1 if (x>60 and x<=70) else 0 for x in dataf['age']]
+        dataf['range7'] = [1 if (x>70 and x<=80) else 0 for x in dataf['age']]
+        range1_df = dataf.groupby(['date_account_created','range1']).size().unstack(fill_value=0)
+        age1 = range1_df[1].tolist()
+        range2_df = dataf.groupby(['date_account_created','range2']).size().unstack(fill_value=0)
+        age2 = range2_df[1].tolist()
+        range3_df = dataf.groupby(['date_account_created','range3']).size().unstack(fill_value=0)
+        age3 = range3_df[1].tolist()
+        range4_df = dataf.groupby(['date_account_created','range4']).size().unstack(fill_value=0)
+        age4 = range4_df[1].tolist()
+        range5_df = dataf.groupby(['date_account_created','range5']).size().unstack(fill_value=0)
+        age5 = range5_df[1].tolist()
+        range6_df = dataf.groupby(['date_account_created','range6']).size().unstack(fill_value=0)
+        age6 = range6_df[1].tolist()
+        range7_df = dataf.groupby(['date_account_created','range7']).size().unstack(fill_value=0)
+        age7 = range7_df[1].tolist()
 
         dates = get_dates('date_account_created')
         labels = dates
